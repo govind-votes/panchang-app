@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "title": "Daily Panchang",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/download1.jpeg"
+  },
+  {
+    "id": 2,
+    "title": "Horoscope",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/download2.jpeg"
+  },
+  {
+    "id": 3,
+    "title": "Horoscope",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/download4.jpeg"
+  },
+  {
+    "id": 4,
+    "title": "Horoscope",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/images5.jpeg"
+  }
+]

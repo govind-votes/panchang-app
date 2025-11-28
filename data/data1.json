@@ -1,1 +1,137 @@
-
+[
+  {
+    "id": 1,
+    "title": "Ashwini",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/1.png"
+  },
+  {
+    "id": 2,
+    "title": "Bharani",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/2.png"
+  },
+  {
+    "id": 3,
+    "title": "Krittika",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/3.png"
+  },
+  {
+    "id": 4,
+    "title": "Rohini",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/4.png"
+  },
+  {
+    "id": 5,
+    "title": "Mrigashira",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/5.png"
+  },
+  {
+    "id": 6,
+    "title": "Ardra",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/6.png"
+  },
+  {
+    "id": 7,
+    "title": "Punarvasu",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/7.png"
+  },
+  {
+    "id": 8,
+    "title": "Pushya",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/8.png"
+  },
+  {
+    "id": 9,
+    "title": "Ashlesha",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/9.png"
+  },
+  {
+    "id": 10,
+    "title": "Magha",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/10.png"
+  },
+  {
+    "id": 11,
+    "title": "Purva Phalguni",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/11.png"
+  },
+  {
+    "id": 12,
+    "title": "Uttara Phalguni",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/12.png"
+  },
+  {
+    "id": 13,
+    "title": "Hasta",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/13.png"
+  },
+  {
+    "id": 14,
+    "title": "Chitra",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/14.png"
+  },
+  {
+    "id": 15,
+    "title": "Swati",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/15.png"
+  },
+  {
+    "id": 16,
+    "title": "Vishakha",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/16.png"
+  },
+  {
+    "id": 17,
+    "title": "Anuradha",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/17.png"
+  },
+  {
+    "id": 18,
+    "title": "Jyeshtha",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/18.png"
+  },
+  {
+    "id": 19,
+    "title": "Mula",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/19.png"
+  },
+  {
+    "id": 20,
+    "title": "Purva Ashadha",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/20.png"
+  },
+  {
+    "id": 21,
+    "title": "Uttara Ashadha",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/21.png"
+  },
+  {
+    "id": 22,
+    "title": "Shravana",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/22.png"
+  },
+  {
+    "id": 23,
+    "title": "Dhanishta",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/23.png"
+  },
+  {
+    "id": 24,
+    "title": "Shatabhisha",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/24.png"
+  },
+  {
+    "id": 25,
+    "title": "Purva Bhadrapada",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/25.png"
+  },
+  {
+    "id": 26,
+    "title": "Uttara Bhadrapada",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/26.png"
+  },
+  {
+    "id": 27,
+    "title": "Revati",
+    "image": "https://raw.githubusercontent.com/govind-votes/panchang-app/refs/heads/main/image/Print%20ready%20Flash%20cards%20(2)/27.png"
+  }
+]

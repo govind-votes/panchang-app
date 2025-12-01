@@ -1,30 +1,44 @@
+# -------------------------------
+# 1. Use Python 3.10 (stable)
+# -------------------------------
 FROM python:3.10-slim
 
-WORKDIR /app
-
-# Install dependencies required for building Swiss Ephemeris
+# -------------------------------
+# 2. Install OS dependencies
+# -------------------------------
 RUN apt-get update && apt-get install -y \
+    build-essential \
     wget \
     unzip \
-    build-essential \
+    git \
     && rm -rf /var/lib/apt/lists/*
 
-# Download Swiss Ephemeris C library
-RUN wget https://www.astro.com/ftp/swisseph/swetest_src_2.10.03.zip -O swe.zip && \
-    unzip swe.zip -d swe_src && \
-    rm swe.zip
+# -------------------------------
+# 3. Set app directory
+# -------------------------------
+WORKDIR /app
 
-# Build and install Swiss Ephemeris C library
-RUN cd swe_src && \
-    make -f makefile.linux && \
-    cp libswe.so /usr/lib/
+# -------------------------------
+# 4. Copy requirements
+# -------------------------------
+COPY requirements.txt /app/requirements.txt
 
-# Copy requirements and install Python packages
-COPY requirements.txt .
+# -------------------------------
+# 5. Install Python packages
+# -------------------------------
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy source code
-COPY . .
+# -------------------------------
+# 6. Copy application files
+# -------------------------------
+COPY . /app
 
-# Start FastAPI
+# -------------------------------
+# 7. Expose FastAPI port
+# -------------------------------
+EXPOSE 8000
+
+# -------------------------------
+# 8. Start FastAPI with Uvicorn
+# -------------------------------
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

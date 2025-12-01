@@ -3,6 +3,10 @@ from .astrology import get_planet_positions
 
 app = FastAPI(title="Astrology API")
 
+@app.get("/")
+def read_root():
+    return {"message": "Hello"}
+
 @app.get("/astro")
 def astro(
     year: int = Query(...),

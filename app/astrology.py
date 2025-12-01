@@ -1,7 +1,9 @@
 import swisseph as swe
+import os
 
 # Set path to ephemeris files
-swe.set_ephe_path('os.path.dirname(__file__), "ephe"')
+EPHE_PATH = os.path.join(os.path.dirname(__file__), "ephe")
+swe.set_ephe_path(EPHE_PATH)
 
 RASHIS = [
     "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",

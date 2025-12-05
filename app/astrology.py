@@ -1,15 +1,18 @@
 import swisseph as swe
 import os
+from datetime import datetime, timedelta, timezone
 
 # Set path to ephemeris files
 EPHE_PATH = os.path.join(os.path.dirname(__file__), "ephe")
 swe.set_ephe_path(EPHE_PATH)
 
+# Rashi Names
 RASHIS = [
     "Aries", "Taurus", "Gemini", "Cancer", "Leo", "Virgo",
     "Libra", "Scorpio", "Sagittarius", "Capricorn", "Aquarius", "Pisces"
 ]
 
+# Nakshatra Names
 NAKSHATRAS = [
     "Ashwini", "Bharani", "Krittika", "Rohini", "Mrigashira", "Ardra",
     "Punarvasu", "Pushya", "Ashlesha", "Magha", "Purva Phalguni",
@@ -19,6 +22,7 @@ NAKSHATRAS = [
     "Uttara Bhadrapada", "Revati"
 ]
 
+# Panet Names
 PLANETS = {
     "sun": swe.SUN,
     "moon": swe.MOON,
@@ -30,6 +34,33 @@ PLANETS = {
     "rahu": swe.MEAN_NODE,  # Rahu (North Node)
     "ketu": swe.MEAN_NODE   # Ketu (180° from Rahu)
 }
+
+# Tithi Names (1–30)
+TITHIS = [
+    "Pratipada", "Dvitiya", "Tritiya", "Chaturthi", "Panchami", "Shashthi",
+    "Saptami", "Ashtami", "Navami", "Dashami", "Ekadashi", "Dwadashi",
+    "Trayodashi", "Chaturdashi", "Purnima",
+    "Pratipada", "Dvitiya", "Tritiya", "Chaturthi", "Panchami", "Shashthi",
+    "Saptami", "Ashtami", "Navami", "Dashami", "Ekadashi", "Dwadashi",
+    "Trayodashi", "Chaturdashi", "Amavasya"
+]
+
+# Paksha Names
+PAKSHA = ["Shukla", "Krishna"]
+
+# Yoga Names (27)
+YOGAS = [
+    "Vishkambha","Priti","Ayushman","Saubhagya","Shobhana","Atiganda","Sukarma",
+    "Dhriti","Shoola","Ganda","Vriddhi","Dhruva","Vyaghata","Harshana","Vajra",
+    "Siddhi","Vyatipada","Variyan","Parigha","Shiva","Siddha","Sadhya","Shubha",
+    "Shukla","Brahma","Indra","Vaidhriti"
+]
+
+# Karana Names (11 unique, repeat cycle)
+KARANAS = [
+    "Bava","Balava","Kaulava","Taitila","Garaja","Vanija","Vishti",
+    "Shakuni","Chatushpada","Naga","Kimstughna"
+]
 
 def get_rashi(longitude, jd):
     try:
@@ -60,34 +91,110 @@ def get_lagna(jd, lat, lon):
     except Exception as e:
         raise ValueError(f"Error calculating Lagna: {str(e)}")
 
-def get_tithi(jd):
+def get_tithi_details(jd):
     try:
         sun_lon = swe.calc_ut(jd, swe.SUN)[0][0]
         moon_lon = swe.calc_ut(jd, swe.MOON)[0][0]
+
         diff = (moon_lon - sun_lon) % 360
-        tithi_num = int(diff / 12) + 1  # 12° per tithi
-        return tithi_num
+        tithi_num = int(diff / 12) + 1  # 1–30
+
+        # Tithi name
+        tithi_name = TITHIS[tithi_num - 1]
+
+        # Paksha
+        paksha = "Shukla" if tithi_num <= 15 else "Krishna"
+
+        return tithi_num, tithi_name, paksha
     except Exception as e:
         raise ValueError(f"Error calculating Tithi: {str(e)}")
 
-def get_yoga(jd):
+def get_yoga_name(jd):
     try:
         sun_lon = swe.calc_ut(jd, swe.SUN)[0][0]
         moon_lon = swe.calc_ut(jd, swe.MOON)[0][0]
         yoga_angle = (sun_lon + moon_lon) % 360
-        yoga_num = int(yoga_angle / 13.3333333) + 1  # 27 yogas
-        return yoga_num
+        yoga_num = int(yoga_angle / 13.3333333)
+
+        return yoga_num + 1, YOGAS[yoga_num]
     except Exception as e:
         raise ValueError(f"Error calculating Yoga: {str(e)}")
 
-def get_karana(jd):
+def get_karana_name(jd):
     try:
-        tithi_num = get_tithi(jd)
-        karana_num = tithi_num * 2 - 1
-        karana_name = f"Karana {karana_num}"
+        tithi_num,a,b= get_tithi_details(jd)
+
+        # Karanas repeat in a cycle of 11
+        cycle = [
+            "Bava","Balava","Kaulava","Taitila","Garaja","Vanija","Vishti",
+            "Bava","Balava","Kaulava","Taitila","Garaja","Vanija","Vishti",
+            "Bava","Balava","Kaulava","Taitila","Garaja","Vanija","Vishti",
+            "Shakuni","Chatushpada","Naga","Kimstughna"
+        ]
+
+        karana_name = cycle[tithi_num - 1]
         return karana_name
     except Exception as e:
         raise ValueError(f"Error calculating Karana: {str(e)}")
+
+def get_var(jd):
+    try:
+        # swe.day_of_week: 0=Sunday, 1=Monday...
+        weekday = swe.day_of_week(jd)
+
+        VARAS = [
+            "Ravivara", "Somavara", "Mangalavara", "Budhavara",
+            "Guruvara", "Shukravara", "Shanivara"
+        ]
+        return VARAS[weekday]
+    except Exception as e:
+        raise ValueError(f"Error calculating Var: {str(e)}")
+
+def get_masa(jd):
+    try:
+        sun_lon = swe.calc_ut(jd, swe.SUN)[0][0]
+        ayan = swe.get_ayanamsa_ut(jd)
+        sidereal_sun = (sun_lon - ayan) % 360
+        masa_num = int(sidereal_sun // 30)
+
+        MASA = [
+            "Chaitra", "Vaishakha", "Jyeshtha", "Ashadha", "Shravana", "Bhadrapada",
+            "Ashwin", "Kartika", "Margashirsha", "Pausha", "Magha", "Phalguna"
+        ]
+        return MASA[masa_num]
+    except Exception as e:
+        raise ValueError(f"Error calculating Masa: {str(e)}")
+    
+def jd_to_local_time(jd, tz_offset):
+    """Convert Julian Day to local datetime string"""
+    if jd is None:
+        return None
+
+    # Convert JD → UTC datetime
+    utc_dt = datetime(1970, 1, 1, tzinfo=timezone.utc) + timedelta(days=(jd - 2440587.5))
+
+    # Convert UTC → local timezone
+    local_dt = utc_dt + timedelta(hours=tz_offset)
+
+    return local_dt.strftime("%H:%M:%S")
+    
+def get_sunrise_sunset(year, month, day, lat, lon, tz_offset=5.5):
+    try:
+        # swe.rise_trans: 1 = rise, 2 = set
+        jd_start = swe.julday(year, month, day, 0)
+        geopos = [lon, lat, 0]  # longitude, latitude, altitude
+        sunrise_jd= swe.rise_trans(jd_start, swe.SUN, 1, geopos)[1][0]
+        sunset_jd  = swe.rise_trans(jd_start, swe.SUN, 2, geopos)[1][0]
+
+        # Convert JD to local time (default IST: UTC+5:30)
+        sunrise_local = jd_to_local_time(sunrise_jd, tz_offset)
+        sunset_local = jd_to_local_time(sunset_jd, tz_offset)
+
+        return sunrise_local, sunset_local
+    except Exception as e:
+        raise ValueError(f"Error calculating sunrise_sunset: {str(e)}")
+    
+
 
 def get_planet_positions(year, month, day, hour, lat, lon):
     try:
@@ -103,11 +210,25 @@ def get_planet_positions(year, month, day, hour, lat, lon):
         moon_nak, moon_pada, _ = get_nakshatra(moon_lon, jd)
         result["moon"] = {"nakshatra": moon_nak, "pada": moon_pada}
 
-        # Panchang elements
-        result["tithi"] = get_tithi(jd)
-        result["yoga"] = get_yoga(jd)
-        result["karana"] = get_karana(jd)
+        # --- Panchang details ---
+        tithi_num, tithi_name, paksha = get_tithi_details(jd)
+        yoga_num, yoga_name = get_yoga_name(jd)
+        karana_name = get_karana_name(jd)
+        masa = get_masa(jd)
+        vara = get_var(jd)
+        sunrise, sunset = get_sunrise_sunset(year, month, day, lat, lon)
+        
 
-        return result["moon"]
+        return {
+                    "lagna": result["lagna"],
+                    "moon": result["moon"],
+                    "tithi": {"number": tithi_num, "name": tithi_name, "paksha": paksha},
+                    "masa": masa,
+                    "var": vara,
+                    "yoga": {"number": yoga_num, "name": yoga_name},
+                    "karana": karana_name,
+                    "sunrise": sunrise,
+                    "sunset": sunset
+                }
     except Exception as e:
         raise ValueError(f"Error calculating Panchang: {str(e)}")

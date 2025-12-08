@@ -113,8 +113,13 @@ def get_yoga_name(jd):
     try:
         sun_lon = swe.calc_ut(jd, swe.SUN)[0][0]
         moon_lon = swe.calc_ut(jd, swe.MOON)[0][0]
-        yoga_angle = (sun_lon + moon_lon) % 360
-        yoga_num = int(yoga_angle / 13.3333333)
+        ayan = swe.get_ayanamsa_ut(jd)
+
+        sun_sidereal = (sun_lon - ayan) % 360
+        moon_sidereal = (moon_lon - ayan) % 360
+
+        yoga_angle = (sun_sidereal + moon_sidereal) % 360
+        yoga_num = int(yoga_angle / (360 / 27))
 
         return yoga_num + 1, YOGAS[yoga_num]
     except Exception as e:
@@ -122,30 +127,30 @@ def get_yoga_name(jd):
 
 def get_karana_name(jd):
     try:
-        tithi_num,a,b= get_tithi_details(jd)
+        sun_lon = swe.calc_ut(jd, swe.SUN)[0][0]
+        moon_lon = swe.calc_ut(jd, swe.MOON)[0][0]
+        diff = (moon_lon - sun_lon) % 360
 
-        # Karanas repeat in a cycle of 11
-        cycle = [
-            "Bava","Balava","Kaulava","Taitila","Garaja","Vanija","Vishti",
-            "Bava","Balava","Kaulava","Taitila","Garaja","Vanija","Vishti",
-            "Bava","Balava","Kaulava","Taitila","Garaja","Vanija","Vishti",
-            "Shakuni","Chatushpada","Naga","Kimstughna"
-        ]
+        karana_number = int(diff // 6)  # 0–59
 
-        karana_name = cycle[tithi_num - 1]
-        return karana_name
+        repeating = ["Bava","Balava","Kaulava","Taitila","Garaja","Vanija","Vishti"]
+
+        if karana_number == 0:
+            return "Kimstughna"
+        elif 1 <= karana_number <= 56:
+            return repeating[(karana_number - 1) % 7]
+        else:
+            fixed = ["Shakuni", "Chatushpada", "Naga", "Kimstughna"]
+            return fixed[karana_number - 57]
     except Exception as e:
         raise ValueError(f"Error calculating Karana: {str(e)}")
 
-def get_var(jd):
+def get_var(jd,tz_offset=5.5):
     try:
-        # swe.day_of_week: 0=Sunday, 1=Monday...
-        weekday = swe.day_of_week(jd)
-
-        VARAS = [
-            "Ravivara", "Somavara", "Mangalavara", "Budhavara",
-            "Guruvara", "Shukravara", "Shanivara"
-        ]
+        local_jd = jd + tz_offset/24
+        weekday = swe.day_of_week(local_jd)
+        VARAS = ["Somavara", "Mangalavara", "Budhavara",
+                "Guruvara", "Shukravara", "Shanivara","Ravivara"]
         return VARAS[weekday]
     except Exception as e:
         raise ValueError(f"Error calculating Var: {str(e)}")

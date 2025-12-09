@@ -195,7 +195,7 @@ def get_sunrise_sunset(year, month, day, lat, lon, tz_offset=5.5):
         sunrise_local = jd_to_local_time(sunrise_jd, tz_offset)
         sunset_local = jd_to_local_time(sunset_jd, tz_offset)
 
-        return sunrise_local, sunset_local
+        return sunrise_jd,sunrise_local, sunset_local
     except Exception as e:
         raise ValueError(f"Error calculating sunrise_sunset: {str(e)}")
     
@@ -203,25 +203,27 @@ def get_sunrise_sunset(year, month, day, lat, lon, tz_offset=5.5):
 
 def get_planet_positions(year, month, day, hour, lat, lon):
     try:
+        sunrise_jd,sunrise, sunset = get_sunrise_sunset(year, month, day, lat, lon)
+
         jd = swe.julday(year, month, day, hour)
         result = {}
 
         # Lagna
-        lagna_rashi, lagna_sid = get_lagna(jd, lat, lon)
+        lagna_rashi, lagna_sid = get_lagna(sunrise_jd, lat, lon)
         result["lagna"] = {"rashi": lagna_rashi, "sidereal_longitude": lagna_sid}
 
         # Moon Nakshatra only in return for now
-        moon_lon = swe.calc_ut(jd, swe.MOON)[0][0]
-        moon_nak, moon_pada, _ = get_nakshatra(moon_lon, jd)
+        moon_lon = swe.calc_ut(sunrise_jd, swe.MOON)[0][0]
+        moon_nak, moon_pada, _ = get_nakshatra(moon_lon, sunrise_jd)
         result["moon"] = {"nakshatra": moon_nak, "pada": moon_pada}
 
         # --- Panchang details ---
-        tithi_num, tithi_name, paksha = get_tithi_details(jd)
-        yoga_num, yoga_name = get_yoga_name(jd)
-        karana_name = get_karana_name(jd)
-        masa = get_masa(jd)
-        vara = get_var(jd)
-        sunrise, sunset = get_sunrise_sunset(year, month, day, lat, lon)
+        tithi_num, tithi_name, paksha = get_tithi_details(sunrise_jd)
+        yoga_num, yoga_name = get_yoga_name(sunrise_jd)
+        karana_name = get_karana_name(sunrise_jd)
+        masa = get_masa(sunrise_jd)
+        vara = get_var(sunrise_jd)
+        
         
 
         return {

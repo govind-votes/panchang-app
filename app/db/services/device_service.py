@@ -1,11 +1,37 @@
 from sqlalchemy.orm import Session
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
 from app.db.models.device import Device
 from app.db.repositories.device_repository import DeviceRepository
-from datetime import datetime
+
+
+TIMEZONE_ALIASES = {
+    "Asia/Calcutta": "Asia/Kolkata",
+}
+
+
+def normalize_timezone(timezone: str | None) -> str:
+    """
+    Normalize timezone to a valid IANA timezone.
+
+    - Converts legacy aliases (Asia/Calcutta -> Asia/Kolkata)
+    - Falls back to UTC if timezone is invalid or missing
+    """
+
+    if not timezone:
+        return "UTC"
+
+    timezone = TIMEZONE_ALIASES.get(timezone, timezone)
+
+    try:
+        ZoneInfo(timezone)
+        return timezone
+    except Exception:
+        return "UTC"
 
 
 class DeviceService:
-
     @staticmethod
     def register_or_update_device(
         db: Session,
@@ -15,12 +41,11 @@ class DeviceService:
         fcm_token: str,
         latitude: float | None = None,
         longitude: float | None = None,
-        
     ) -> Device:
 
+        timezone = normalize_timezone(timezone)
         existing_device = DeviceRepository.get_device_by_device_id(
-            db=db,
-            device_id=device_id
+            db=db, device_id=device_id
         )
 
         if existing_device:
@@ -48,7 +73,7 @@ class DeviceService:
             fcm_token=fcm_token,
             latitude=latitude,
             longitude=longitude,
-            last_seen_at=datetime.utcnow()
+            last_seen_at=datetime.utcnow(),
         )
 
         return DeviceRepository.create_device(db, new_device)

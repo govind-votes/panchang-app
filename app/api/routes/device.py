@@ -50,7 +50,7 @@ def device_heartbeat(payload: DeviceHeartbeatRequest, db: Session = Depends(get_
         device = DeviceService.register_or_update_device(
             db=db,
             device_id=payload.device_id,
-            platform=payload.platform,  # platform not updated here
+            platform="unknown",  # heartbeat payload has no platform; service only updates it when != "unknown"
             timezone=payload.timezone,
             latitude=payload.latitude,
             longitude=payload.longitude,

@@ -131,44 +131,44 @@ def send_daily_notifications():
                 # 🧪 Every 5 Minutes Window
                 # Temporary test block. Safe to comment out or delete later.
                 # -------------------------
-                if local_now.minute % 5 == 0:
-                    notif_type = "DAILY_NAKSHATRA"
-                    bucket_str = local_now.replace(
-                        second=0,
-                        microsecond=0,
-                    ).isoformat()
+                # if local_now.minute % 5 == 0:
+                #     notif_type = "DAILY_NAKSHATRA"
+                #     bucket_str = local_now.replace(
+                #         second=0,
+                #         microsecond=0,
+                #     ).isoformat()
 
-                    if not _already_sent(device.fcm_token, notif_type, bucket_str):
-                        message_id = send_push_notification(
-                            token=device.fcm_token,
-                            title="Nakshatra Update ✨",
-                            body=(
-                                f"Today's Nakshatra: {nakshatra_name} 🌙"
-                                if nakshatra_name
-                                else "Your daily nakshatra update is ready ✨"
-                            ),
-                            data={
-                                "type": notif_type,
-                                "date": today_str,
-                                "nakshatra": nakshatra_name,
-                                "navigateTo": "Home",
-                                "deviceId": str(device.device_id),
-                                "icon": "moon_stars",
-                                "emoji": "✨",
-                                "style": "daily",
-                            },
-                            image_url="https://images.unsplash.com/photo-1532968961962-8a0cb3a2d4f5",
-                        )
+                #     if not _already_sent(device.fcm_token, notif_type, bucket_str):
+                #         message_id = send_push_notification(
+                #             token=device.fcm_token,
+                #             title="Nakshatra Update ✨",
+                #             body=(
+                #                 f"Today's Nakshatra: {nakshatra_name} 🌙"
+                #                 if nakshatra_name
+                #                 else "Your daily nakshatra update is ready ✨"
+                #             ),
+                #             data={
+                #                 "type": notif_type,
+                #                 "date": today_str,
+                #                 "nakshatra": nakshatra_name,
+                #                 "navigateTo": "Home",
+                #                 "deviceId": str(device.device_id),
+                #                 "icon": "moon_stars",
+                #                 "emoji": "✨",
+                #                 "style": "daily",
+                #             },
+                #             image_url="https://images.unsplash.com/photo-1532968961962-8a0cb3a2d4f5",
+                #         )
 
-                        if message_id:
-                            _mark_sent(device.fcm_token, notif_type, bucket_str)
-                            logger.info(
-                                "notification_sent device_id=%s type=%s date=%s message_id=%s",
-                                device.device_id,
-                                notif_type,
-                                bucket_str,
-                                message_id,
-                            )
+                #         if message_id:
+                #             _mark_sent(device.fcm_token, notif_type, bucket_str)
+                #             logger.info(
+                #                 "notification_sent device_id=%s type=%s date=%s message_id=%s",
+                #                 device.device_id,
+                #                 notif_type,
+                #                 bucket_str,
+                #                 message_id,
+                #             )
 
                 # -------------------------
                 # ⏳ Nakshatra End Window (±2 min)

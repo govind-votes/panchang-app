@@ -3,7 +3,7 @@ from fastapi import FastAPI, Query, HTTPException
 from contextlib import asynccontextmanager
 from .astrology import get_planet_positions
 from .scheduler import create_scheduler, shutdown_scheduler
-from app.api.routes import device_router
+from app.api.routes import device_router, reminder_router
 import logging
 
 load_dotenv()
@@ -45,6 +45,7 @@ def read_root():
     return {"message": "Hello"}
 
 app.include_router(device_router)
+app.include_router(reminder_router)
 
 @app.get("/astro")
 def astro(

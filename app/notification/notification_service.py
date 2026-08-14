@@ -5,24 +5,25 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 from .firebase_service import send_push_notification
 from app.db.repositories.device_repository import DeviceRepository
+from app.db.repositories.notification_log_repository import NotificationLogRepository
 from app.db.session import SessionLocal
 from app.astrology import (
     get_today_nakshatra_end_datetime,
     get_planet_positions,
 )
 
-# In-memory cache to prevent duplicate notifications
-# Key format: (device_token, notification_type, date)
-_SENT_CACHE = set()
 logger = logging.getLogger("notification")
 
 
-def _already_sent(device_token: str, notif_type: str, date_str: str) -> bool:
-    return (device_token, notif_type, date_str) in _SENT_CACHE
+# Persisted via NotificationLogRepository — a plain in-memory set previously
+# backed this, which silently lost its dedup state on every restart and
+# didn't work across multiple worker processes.
+def _already_sent(db, device_id: str, notif_type: str, date_str: str) -> bool:
+    return NotificationLogRepository.already_sent(db, device_id, notif_type, date_str)
 
 
-def _mark_sent(device_token: str, notif_type: str, date_str: str):
-    _SENT_CACHE.add((device_token, notif_type, date_str))
+def _mark_sent(db, device_id: str, notif_type: str, date_str: str):
+    NotificationLogRepository.mark_sent(db, device_id, notif_type, date_str)
 
 
 def _deactivate_device_for_invalid_token(db, device):
@@ -95,7 +96,7 @@ def send_daily_notifications():
                 if local_now.hour == 6 and 0 <= local_now.minute <= 5:
                     notif_type = "DAILY_NAKSHATRA"
 
-                    if not _already_sent(device.fcm_token, notif_type, today_str):
+                    if not _already_sent(db, device.device_id, notif_type, today_str):
                         message_id = send_push_notification(
                             token=device.fcm_token,
                             title="Nakshatra Update ✨",
@@ -118,7 +119,7 @@ def send_daily_notifications():
                         )
 
                         if message_id:
-                            _mark_sent(device.fcm_token, notif_type, today_str)
+                            _mark_sent(db, device.device_id, notif_type, today_str)
                             logger.info(
                                 "notification_sent device_id=%s type=%s date=%s message_id=%s",
                                 device.device_id,
@@ -185,7 +186,7 @@ def send_daily_notifications():
                     if diff_seconds <= 120:
                         notif_type = "NAKSHATRA_END"
 
-                        if not _already_sent(device.fcm_token, notif_type, today_str):
+                        if not _already_sent(db, device.device_id, notif_type, today_str):
                             message_id = send_push_notification(
                                 token=device.fcm_token,
                                 title="Nakshatra Ending Soon ⏳",
@@ -208,7 +209,7 @@ def send_daily_notifications():
                             )
 
                             if message_id:
-                                _mark_sent(device.fcm_token, notif_type, today_str)
+                                _mark_sent(db, device.device_id, notif_type, today_str)
                                 logger.info(
                                     "notification_sent device_id=%s type=%s date=%s message_id=%s",
                                     device.device_id,
